@@ -1,0 +1,307 @@
+/* Estilos personalizados para o Dashboard VoIP */
+
+:root {
+  --primary-color: #4e73df;
+  --success-color: #1cc88a;
+  --warning-color: #f6c23e;
+  --danger-color: #e74a3b;
+  --info-color: #36b9cc;
+  --gray-100: #f8f9fc;
+  --gray-200: #eaecf4;
+  --gray-300: #dddfeb;
+  --gray-400: #d1d3e2;
+  --gray-500: #b7b9cc;
+  --gray-600: #858796;
+  --gray-700: #6e707e;
+  --gray-800: #5a5c69;
+  --gray-900: #3a3b45;
+}
+
+body {
+  background-color: var(--gray-100);
+  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Cards de resumo */
+.border-left-primary {
+  border-left: 0.25rem solid var(--primary-color) !important;
+}
+
+.border-left-success {
+  border-left: 0.25rem solid var(--success-color) !important;
+}
+
+.border-left-warning {
+  border-left: 0.25rem solid var(--warning-color) !important;
+}
+
+.border-left-info {
+  border-left: 0.25rem solid var(--info-color) !important;
+}
+
+.border-left-danger {
+  border-left: 0.25rem solid var(--danger-color) !important;
+}
+
+/* Textos */
+.text-xs {
+  font-size: 0.7rem;
+}
+
+.text-gray-300 {
+  color: var(--gray-300) !important;
+}
+
+.text-gray-800 {
+  color: var(--gray-800) !important;
+}
+
+/* Cards */
+.card {
+  border: none;
+  border-radius: 0.35rem;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+
+.card-header {
+  background-color: #f8f9fc;
+  border-bottom: 1px solid #e3e6f0;
+  font-weight: 700;
+  color: var(--gray-700);
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Alertas */
+.alert {
+  border: none;
+  border-radius: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.alert-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border-left: 0.25rem solid var(--warning-color);
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 0.25rem solid var(--danger-color);
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-left: 0.25rem solid var(--info-color);
+}
+
+/* Tabela */
+.table {
+  background-color: white;
+  border-radius: 0.35rem;
+  overflow: hidden;
+}
+
+.table thead th {
+  background-color: var(--gray-100);
+  border-bottom: 2px solid var(--gray-300);
+  font-weight: 700;
+  color: var(--gray-700);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.table tbody tr:hover {
+  background-color: var(--gray-100);
+}
+
+/* Status badges */
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.status-200 {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-404 {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-486 {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-487 {
+  background-color: #e2e3e5;
+  color: #383d41;
+}
+
+/* Top lists */
+.top-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.top-item:last-child {
+  border-bottom: none;
+}
+
+.top-item .rank {
+  font-weight: 700;
+  color: var(--primary-color);
+  min-width: 30px;
+}
+
+.top-item .info {
+  flex: 1;
+  margin: 0 1rem;
+}
+
+.top-item .value {
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+/* Paginação */
+.pagination .page-link {
+  color: var(--primary-color);
+  border-color: var(--gray-300);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Filtros */
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: #2e59d9;
+  border-color: #2653d4;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0.5rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .table-responsive {
+    font-size: 0.8rem;
+  }
+}
+
+/* Animações */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-400);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-500);
+}
+
+/* Tooltips */
+.tooltip {
+  font-size: 0.8rem;
+}
+
+/* Progress bars */
+.progress {
+  height: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.progress-bar {
+  background-color: var(--primary-color);
+}
+
+/* Badges */
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Dropdown */
+.dropdown-menu {
+  border: none;
+  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  border-radius: 0.35rem;
+}
+
+.dropdown-item:hover {
+  background-color: var(--gray-100);
+}
+
+/* Navbar */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.navbar-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8) !important;
+}

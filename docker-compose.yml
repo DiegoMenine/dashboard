@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # Banco de dados MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: voip_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-voip123456}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-sippulse_reports}
+      MYSQL_USER: ${MYSQL_USER:-voip_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-voip123456}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database_setup.sql:/docker-entrypoint-initdb.d/01-setup.sql
+      - ./mysql_config:/etc/mysql/conf.d
+    ports:
+      - "3306:3306"
+    networks:
+      - voip_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Dashboard VoIP
+  dashboard:
+    build: .
+    container_name: voip_dashboard
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=${MYSQL_USER:-voip_user}
+      - DB_PASSWORD=${MYSQL_PASSWORD:-voip123456}
+      - DB_NAME=${MYSQL_DATABASE:-sippulse_reports}
+      - FLASK_DEBUG=${FLASK_DEBUG:-False}
+      - ENVIRONMENT=${ENVIRONMENT:-production}
+    volumes:
+      - ./logs:/var/log/voip_dashboard
+      - ./imports:/opt/voip_import
+      - ./backups:/opt/voip_backups
+      - ./config:/app/config
+    ports:
+      - "5000:5000"
+    networks:
+      - voip_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/overview"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx como proxy reverso (opcional)
+  nginx:
+    image: nginx:alpine
+    container_name: voip_nginx
+    restart: unless-stopped
+    depends_on:
+      - dashboard
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - voip_network
+    profiles:
+      - production
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  voip_network:
+    driver: bridge 
