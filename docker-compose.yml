@@ -20,9 +20,10 @@ services:
     networks:
       - voip_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-voip123456}"]
+      timeout: 30s
+      retries: 15
+      start_period: 60s
 
   # Dashboard VoIP
   dashboard:
@@ -51,9 +52,9 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/api/overview"]
       interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      timeout: 15s
+      retries: 5
+      start_period: 60s
 
   # Nginx como proxy reverso (opcional)
   nginx:
