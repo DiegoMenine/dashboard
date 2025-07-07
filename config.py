@@ -6,18 +6,18 @@ from pathlib import Path
 
 # === CONFIGURAÇÕES SSH ===
 SSH_CONFIG = {
-    "host": "200.159.177.191",
-    "user": "root",
-    "password": "Tel1YccR^oOZjJ4",
+    "host": os.getenv("SSH_HOST", "200.159.177.191"),
+    "user": os.getenv("SSH_USER", "root"),
+    "password": os.getenv("SSH_PASS", "Tel1YccR^oOZjJ4"),
     "remote_dir": "/srv/backups/voip-reports/",
     "local_dir": "/opt/voip_import/"
 }
 
 # === CONFIGURAÇÕES DO BANCO DE DADOS ===
 DB_CONFIG = {
-    "host": os.getenv("DB_HOST", "localhost"),
+    "host": os.getenv("DB_HOST", "mysql"),  # Nome do container MySQL no docker-compose
     "user": os.getenv("DB_USER", "root"),
-    "password": os.getenv("DB_PASSWORD", "sua_senha_mysql"),
+    "password": os.getenv("DB_PASSWORD", "voip123456"),
     "database": os.getenv("DB_NAME", "sippulse_reports"),
     "charset": "utf8mb4",
     "autocommit": True

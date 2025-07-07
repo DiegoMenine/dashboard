@@ -6,15 +6,15 @@ import mysql.connector
 from pathlib import Path
 
 # === CONFIGURAÇÕES ===
-SSH_HOST = "200.159.177.191"
-SSH_USER = "root"
-SSH_PASS = "Tel1YccR^oOZjJ4"
+SSH_HOST = os.getenv("SSH_HOST", "200.159.177.191")
+SSH_USER = os.getenv("SSH_USER", "root")
+SSH_PASS = os.getenv("SSH_PASS", "Tel1YccR^oOZjJ4")
 REMOTE_DIR = "/srv/backups/voip-reports/"
 LOCAL_DIR = "/opt/voip_import/"
 DB_CONFIG = {
-    "host": "localhost",
+    "host": "mysql",  # Nome do container MySQL no docker-compose
     "user": "root",
-    "password": "sua_senha_mysql",
+    "password": os.getenv("MYSQL_ROOT_PASSWORD", "voip123456"),
     "database": "sippulse_reports"
 }
 

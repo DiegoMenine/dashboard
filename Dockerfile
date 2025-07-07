@@ -36,8 +36,7 @@ COPY . .
 RUN mkdir -p /app/static /app/templates /var/log/voip_dashboard /opt/voip_import /opt/voip_backups
 
 # Configurar permissões
-RUN chown -R voipuser:voipuser /app /var/log/voip_dashboard /opt/voip_import /opt/voip_backups && \
-    chmod +x /app/start_dashboard.sh
+RUN chown -R voipuser:voipuser /app /var/log/voip_dashboard /opt/voip_import /opt/voip_backups
 
 # Expor porta
 EXPOSE 5000

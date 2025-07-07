@@ -10,9 +10,9 @@ app = Flask(__name__)
 
 # Configuração do banco de dados
 DB_CONFIG = {
-    "host": "localhost",
+    "host": "mysql",  # Nome do container MySQL no docker-compose
     "user": "root",
-    "password": "sua_senha_mysql",
+    "password": "voip123456",  # Senha definida no .env
     "database": "sippulse_reports"
 }
 
