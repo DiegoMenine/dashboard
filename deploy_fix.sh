@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script de Deploy para Dashboard VoIP
+# Script de Deploy Corrigido para Dashboard VoIP
 # Execute este script no seu VPS Debian 11
 
 set -e
@@ -29,7 +29,7 @@ error() {
 # Banner
 echo -e "${BLUE}"
 echo "=================================================="
-echo "    🎯 DASHBOARD VOIP - DEPLOY AUTOMATIZADO"
+echo "    🎯 DASHBOARD VOIP - DEPLOY CORRIGIDO"
 echo "=================================================="
 echo -e "${NC}"
 
@@ -60,6 +60,7 @@ sudo apt install -y \
     htop \
     vim \
     unzip \
+    rsync \
     software-properties-common \
     apt-transport-https \
     ca-certificates \
@@ -95,18 +96,38 @@ log "Criando diretório do projeto: $PROJECT_DIR"
 sudo mkdir -p $PROJECT_DIR
 sudo chown $USER:$USER $PROJECT_DIR
 
-# Clonar ou copiar arquivos do projeto
-if [ -d ".git" ]; then
-    log "Copiando arquivos do projeto..."
-    # Copiar apenas arquivos necessários, ignorando .git
-    rsync -av --exclude='.git' --exclude='.venv' --exclude='__pycache__' --exclude='*.pyc' . $PROJECT_DIR/
-else
-    log "Clonando repositório do projeto..."
-    cd $PROJECT_DIR
-    git clone https://github.com/seu-usuario/voip-dashboard.git .
-fi
+# Copiar arquivos do projeto (versão corrigida)
+log "Copiando arquivos do projeto..."
+# Criar lista de arquivos para copiar
+cat > /tmp/files_to_copy.txt << 'EOF'
+app.py
+config.py
+importador.py
+requirements.txt
+database_setup.sql
+setup.py
+Dockerfile
+docker-compose.yml
+docker-compose.prod.yml
+nginx.conf
+.dockerignore
+README.md
+README_DOCKER.md
+QUICK_START.md
+templates/
+static/
+mysql_config/
+EOF
+
+# Copiar arquivos usando tar (preserva estrutura)
+tar --exclude='.git' --exclude='.venv' --exclude='__pycache__' --exclude='*.pyc' \
+    -czf /tmp/voip-dashboard.tar.gz -T /tmp/files_to_copy.txt 2>/dev/null || \
+    tar --exclude='.git' --exclude='.venv' --exclude='__pycache__' --exclude='*.pyc' \
+    -czf /tmp/voip-dashboard.tar.gz . 2>/dev/null
 
 cd $PROJECT_DIR
+tar -xzf /tmp/voip-dashboard.tar.gz
+rm /tmp/voip-dashboard.tar.gz /tmp/files_to_copy.txt
 
 # Criar arquivo .env
 log "Criando arquivo de configuração .env..."

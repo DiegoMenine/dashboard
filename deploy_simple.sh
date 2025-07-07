@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Script de Deploy para Dashboard VoIP
-# Execute este script no seu VPS Debian 11
+# Script de Deploy Simplificado para Dashboard VoIP
+# Execute este script no diretório do projeto
 
 set -e
 
@@ -29,7 +29,7 @@ error() {
 # Banner
 echo -e "${BLUE}"
 echo "=================================================="
-echo "    🎯 DASHBOARD VOIP - DEPLOY AUTOMATIZADO"
+echo "    🎯 DASHBOARD VOIP - DEPLOY SIMPLIFICADO"
 echo "=================================================="
 echo -e "${NC}"
 
@@ -38,9 +38,9 @@ if [[ $EUID -eq 0 ]]; then
    error "Este script não deve ser executado como root"
 fi
 
-# Verificar sistema operacional
-if [[ ! -f /etc/debian_version ]]; then
-    error "Este script é específico para Debian/Ubuntu"
+# Verificar se estamos no diretório correto
+if [ ! -f "docker-compose.yml" ]; then
+    error "Execute este script no diretório do projeto (onde está o docker-compose.yml)"
 fi
 
 log "Iniciando deploy do Dashboard VoIP..."
@@ -89,28 +89,10 @@ else
     log "Docker Compose já está instalado"
 fi
 
-# Criar diretório do projeto
-PROJECT_DIR="/opt/voip-dashboard"
-log "Criando diretório do projeto: $PROJECT_DIR"
-sudo mkdir -p $PROJECT_DIR
-sudo chown $USER:$USER $PROJECT_DIR
-
-# Clonar ou copiar arquivos do projeto
-if [ -d ".git" ]; then
-    log "Copiando arquivos do projeto..."
-    # Copiar apenas arquivos necessários, ignorando .git
-    rsync -av --exclude='.git' --exclude='.venv' --exclude='__pycache__' --exclude='*.pyc' . $PROJECT_DIR/
-else
-    log "Clonando repositório do projeto..."
-    cd $PROJECT_DIR
-    git clone https://github.com/seu-usuario/voip-dashboard.git .
-fi
-
-cd $PROJECT_DIR
-
-# Criar arquivo .env
-log "Criando arquivo de configuração .env..."
-cat > .env << EOF
+# Criar arquivo .env se não existir
+if [ ! -f ".env" ]; then
+    log "Criando arquivo de configuração .env..."
+    cat > .env << EOF
 # Configurações do MySQL
 MYSQL_ROOT_PASSWORD=voip123456
 MYSQL_DATABASE=sippulse_reports
@@ -126,6 +108,9 @@ SSH_HOST=200.159.177.191
 SSH_USER=root
 SSH_PASS=Tel1YccR^oOZjJ4
 EOF
+else
+    log "Arquivo .env já existe"
+fi
 
 # Criar diretórios necessários
 log "Criando diretórios..."
@@ -182,7 +167,7 @@ fi
 
 # Configurar cron job para importação
 log "Configurando cron job..."
-CRON_JOB="0 2 * * * cd $PROJECT_DIR && docker-compose exec -T dashboard python importador.py >> logs/import.log 2>&1"
+CRON_JOB="0 2 * * * cd $(pwd) && docker-compose exec -T dashboard python importador.py >> logs/import.log 2>&1"
 (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
 log "Cron job configurado"
 
@@ -227,7 +212,7 @@ chmod +x manage.sh
 # Configurar logrotate
 log "Configurando logrotate..."
 sudo tee /etc/logrotate.d/voip-dashboard > /dev/null << EOF
-$PROJECT_DIR/logs/*.log {
+$(pwd)/logs/*.log {
     daily
     missingok
     rotate 30
@@ -236,7 +221,7 @@ $PROJECT_DIR/logs/*.log {
     notifempty
     create 644 $USER $USER
     postrotate
-        docker-compose -f $PROJECT_DIR/docker-compose.yml restart dashboard
+        docker-compose -f $(pwd)/docker-compose.yml restart dashboard
     endscript
 }
 EOF
